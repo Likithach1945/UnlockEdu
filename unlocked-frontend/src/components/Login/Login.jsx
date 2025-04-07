@@ -19,6 +19,7 @@ const Login = ({ setLogin }) => {
     password: "",
   });
 
+    const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -34,6 +35,7 @@ const Login = ({ setLogin }) => {
 
   const onLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       let newUrl = currentState === "Login" ? `${url}/api/user/login` : `${url}/api/user/register`;
       // let newUrl = `${url}/api/user/${currentState === "Login" ? "login" : "register"}`;
@@ -51,26 +53,10 @@ const Login = ({ setLogin }) => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Server error. Please try again.");
-    }
+    }finally {
+        setLoading(false)}
   };
 
-
-  
-  // const handleLogin = async () => {
-  //   const response = await fetch("http://localhost:4000/api/user/login", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ email, password }),
-  //     credentials: "include", // required for cookies if you use them
-  //   });
-  
-  //   const data = await response.json();
-  
-  //   if (data.success) {
-  //     localStorage.setItem("token", data.token); // now your context can read it
-  //     setToken(data.token);
-  //   }
-  // }
   
 
   const toggleForm = () => {
@@ -110,7 +96,7 @@ const Login = ({ setLogin }) => {
               currentState === "Login" && <div className="forgot" onClick={handleForgot}><p>Forgot password</p></div>
             }
         </div>
-        <button type="submit">{currentState === "Login" ? "Login" : "Create account"}</button>
+        <button type="submit" disabled = {loading} >{ loading ? currentState === "login" ? "Logging in..." : "Creating..." : currentState === "Login" ? "Login" : "Create account"}</button>
         
         <div className="account">
           <p>{currentState === "Sign Up" ? "Already have an account?" : "Not registered yet?"}</p>

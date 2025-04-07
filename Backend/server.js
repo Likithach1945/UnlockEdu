@@ -1,29 +1,36 @@
-import express from "express"
-import cors from "cors"
+
+
+import express from "express";
+import cors from "cors";
 import { connectDB } from "./config/db.js";
 import userRouter from "./routes/userRouter.js";
-import "dotenv/config"
+import cookieParser from "cookie-parser"; // Needed to read cookies
+import "dotenv/config";
 
-//app config
-const app = express()
+// App config
+const app = express();
 const port = process.env.PORT || 4000;
 
-//middleware
-app.use(express.json());
+// ✅ Middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "https://unlockedu-frontend.onrender.com/",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
 }));
-app.use("/api/user",userRouter)
+app.use(express.json());
+app.use(cookieParser());
 
-// db connection
+// ✅ Routes
+app.use("/api/user", userRouter);
+
+// ✅ DB Connection
 connectDB();
 
-app.get("/",(req,res)=>{
-    res.send("Api working")
-})
+// ✅ Default route
+app.get("/", (req, res) => {
+    res.send("API working");
+});
 
-app.listen(port,()=>{
-    console.log(`port is running on ${port}`)
-})
-
+// ✅ Start server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
