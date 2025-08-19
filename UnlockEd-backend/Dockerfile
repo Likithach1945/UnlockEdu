@@ -1,16 +1,19 @@
-# Use official Java 17 image
-FROM eclipse-temurin:17-jdk AS build
+# Build stage with Maven
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and project files
-COPY . .
+# Copy pom.xml and download dependencies first (for caching)
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Build the application
-RUN ./mvnw clean package -DskipTests
+# Copy source code
+COPY src ./src
 
-# Run stage
+# Package application
+RUN mvn clean package -DskipTests
+
+# Run stage (lightweight JRE image)
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
