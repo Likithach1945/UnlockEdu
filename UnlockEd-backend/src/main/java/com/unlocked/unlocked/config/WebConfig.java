@@ -17,7 +17,7 @@ public class WebConfig {
 
         // Allow all origins (for testing) or specify your frontend URL
         config.addAllowedOrigin("http://localhost:5173"); // React dev
-        config.addAllowedOrigin("https://unlocked.netlify.app"); // Netlify prod
+        config.addAllowedOrigin("https://unlockedu.netlify.app"); // Netlify prod
 
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
