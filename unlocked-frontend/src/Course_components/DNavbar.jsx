@@ -28,7 +28,7 @@ const DNavbar = () => {
             key={course.courseId || course.id}
             onClick={() => navigate(`/courses/${course.courseId || course.id}`)}
           >
-            <li>{course.title}</li>
+            {course.title}
           </li>
         ))}
       </ul>
