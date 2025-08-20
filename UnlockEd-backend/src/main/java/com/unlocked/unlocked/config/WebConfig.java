@@ -14,34 +14,38 @@ import java.util.Arrays;
 //     @Bean
 //     public CorsFilter corsFilter() {
 //         CorsConfiguration config = new CorsConfiguration();
-//         config.addAllowedOriginPattern("*");
-// //        config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // React URL
+
+//         // Allow all origins (for testing) or specify your frontend URL
+//         config.addAllowedOrigin("http://localhost:5173"); // React dev
+//         config.addAllowedOrigin("https://unlocked.netlify.app"); // Netlify prod
+
 //         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//         config.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
-//         config.setAllowCredentials(true); // Allow sending cookies/auth info
+//         config.setAllowedHeaders(Arrays.asList("*"));
+//         config.setAllowCredentials(true);
 
 //         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//         source.registerCorsConfiguration("/**", config); // Apply to all routes
+//         source.registerCorsConfiguration("/**", config);
 //         return new CorsFilter(source);
 //     }
 // }
+
+
 @Configuration
 public class WebConfig {
 
     @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-
-        // Allow all origins (for testing) or specify your frontend URL
-        config.addAllowedOrigin("http://localhost:5173"); // React dev
-        config.addAllowedOrigin("https://unlocked.netlify.app"); // Netlify prod
-
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins(
+                            "http://localhost:5173",
+                            "https://unlockedu.netlify.app"
+                        )
+                        .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
+                        .allowCredentials(true);
+            }
+        };
     }
 }
