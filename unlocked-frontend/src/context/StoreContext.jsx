@@ -3,9 +3,11 @@ import React, { useEffect, useState, createContext } from "react";
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
+
+
 //   const url = "http://localhost:4000";
   const url = "https://unlockedu-auth-backend.onrender.com";
-  const [token, setToken] = useState("");
+
   // const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]); // Store courses
 

@@ -12,7 +12,11 @@ const Hero = ({ setLogin }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
+<<<<<<< HEAD
         const response = await fetch("https://unlockedu.onrender.com/api/courses");
+=======
+        const response = await fetch("http://localhost:8080/api/courses");
+>>>>>>> bd11d3eb4494ded1be46c4859bac7b9f1399a284
         const data = await response.json();
         setCourses(data);
       } catch (error) {

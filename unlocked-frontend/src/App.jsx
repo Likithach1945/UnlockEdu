@@ -40,7 +40,7 @@ const App = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(""https://unlockedu.onrender.com/api/courses"");
+        const response = await fetch(https://unlockedu.onrender.com/api/courses");
         const data = await response.json();
         setCourses(data);
       } catch (error) {

@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_URL = ""https://unlockedu.onrender.com/api/courses"";
 
+
 export const getAllCourses = async () => {
   try {
     const response = await axios.get(API_URL, {

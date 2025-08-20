@@ -1,3 +1,4 @@
+//
 // import React, { useState, useEffect } from "react";
 // import axios from "axios";
 // import ChapterDropdown from "./ChapterDropdown";
@@ -8,19 +9,23 @@
 //   const [assessmentAttempted, setAssessmentAttempted] = useState(false);
 //   const [assessmentPassed, setAssessmentPassed] = useState(false);
 //
-//   useEffect(() => {
-//     // Fetch course details
-//     const fetchCourseDetails = async () => {
-//       try {
-//         const response = await axios.get(
-//           `http://localhost:8080/api/courses/${courseId}`
-//         );
-//         setCourse(response.data);
-//       } catch (error) {
-//         console.error("Error fetching course:", error);
-//       }
-//     };
+//   // Fetch course details
+//   const fetchCourseDetails = async () => {
+//     try {
+//       const response = await axios.get(
+// <<<<<<< HEAD
+//         `"https://unlockedu.onrender.com/api/courses"/${courseId}`
+// =======
+//         `http://localhost:8080/api/courses/${courseId}`
+// >>>>>>> bd11d3eb4494ded1be46c4859bac7b9f1399a284
+//       );
+//       setCourse(response.data);
+//     } catch (error) {
+//       console.error("Error fetching course:", error);
+//     }
+//   };
 //
+//   useEffect(() => {
 //     fetchCourseDetails();
 //   }, [courseId]);
 //
@@ -28,13 +33,17 @@
 //   const unlockNextChapter = async (courseId, chapterId, score) => {
 //     try {
 //       const response = await axios.post(
+// <<<<<<< HEAD
+//         `https://unlockedu.onrender.com/api/unlock/chapter`,
+// =======
 //         `http://localhost:8080/api/unlock/chapter`,
+// >>>>>>> bd11d3eb4494ded1be46c4859bac7b9f1399a284
 //         { courseId, chapterId, score }
 //       );
 //
 //       if (response.data === "Next chapter unlocked!") {
 //         setAssessmentPassed(true);
-//         setTimeout(() => window.location.reload(), 1000);
+//         await fetchCourseDetails(); // ✅ Update state instead of reload
 //       } else {
 //         console.warn("You need at least 70% to unlock the next chapter.");
 //         setAssessmentAttempted(true);
@@ -49,12 +58,16 @@
 //   const unlockNextModule = async (courseId, chapterId, moduleId) => {
 //     try {
 //       const response = await axios.post(
+// <<<<<<< HEAD
+//         `https://unlockedu.onrender.com/api/unlock/module`,
+// =======
 //         `http://localhost:8080/api/unlock/module`,
+// >>>>>>> bd11d3eb4494ded1be46c4859bac7b9f1399a284
 //         { courseId, chapterId, moduleId }
 //       );
 //
 //       if (response.data === "Next module unlocked!") {
-//         setTimeout(() => window.location.reload(), 1000);
+//         await fetchCourseDetails(); // ✅ Update state instead of reload
 //       } else {
 //         console.warn("Unable to unlock the next module. Try again.");
 //       }
@@ -72,7 +85,7 @@
 //       {/* Display the course title */}
 //       <h2 className="course-title">{course.title || course.courseTitle}</h2>
 //
-//       {/* Loop through chapters and render ChapterDropdown */}
+// {/*      loop to render chapters of a course */}
 //       {course.chapters && course.chapters.length > 0 ? (
 //         course.chapters.map((chapter) => (
 //           <ChapterDropdown
@@ -80,7 +93,7 @@
 //             chapter={chapter}
 //             courseId={courseId}
 //             unlockNextChapter={unlockNextChapter}
-//             unlockNextModule={unlockNextModule} // Pass function to unlock next module
+//             unlockNextModule={unlockNextModule}
 //             assessmentAttempted={assessmentAttempted}
 //             assessmentPassed={assessmentPassed}
 //           />
@@ -94,7 +107,6 @@
 //
 // export default CourseDetail;
 
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ChapterDropdown from "./ChapterDropdown";
@@ -105,12 +117,13 @@ const CourseDetail = ({ courseId }) => {
   const [assessmentAttempted, setAssessmentAttempted] = useState(false);
   const [assessmentPassed, setAssessmentPassed] = useState(false);
 
+
+  const API_BASE_URL = "https://unlockedu.onrender.com/api";
+
   // Fetch course details
   const fetchCourseDetails = async () => {
     try {
-      const response = await axios.get(
-        `"https://unlockedu.onrender.com/api/courses"/${courseId}`
-      );
+      const response = await axios.get(`${API_BASE_URL}/courses/${courseId}`);
       setCourse(response.data);
     } catch (error) {
       console.error("Error fetching course:", error);
@@ -124,14 +137,15 @@ const CourseDetail = ({ courseId }) => {
   // Unlock the next chapter after assessment
   const unlockNextChapter = async (courseId, chapterId, score) => {
     try {
-      const response = await axios.post(
-        `https://unlockedu.onrender.com/api/unlock/chapter`,
-        { courseId, chapterId, score }
-      );
+      const response = await axios.post(`${API_BASE_URL}/unlock/chapter`, {
+        courseId,
+        chapterId,
+        score,
+      });
 
       if (response.data === "Next chapter unlocked!") {
         setAssessmentPassed(true);
-        await fetchCourseDetails(); // ✅ Update state instead of reload
+        await fetchCourseDetails(); // Refresh course details
       } else {
         console.warn("You need at least 70% to unlock the next chapter.");
         setAssessmentAttempted(true);
@@ -145,13 +159,14 @@ const CourseDetail = ({ courseId }) => {
   // Unlock the next module after completing module
   const unlockNextModule = async (courseId, chapterId, moduleId) => {
     try {
-      const response = await axios.post(
-        `https://unlockedu.onrender.com/api/unlock/module`,
-        { courseId, chapterId, moduleId }
-      );
+      const response = await axios.post(`${API_BASE_URL}/unlock/module`, {
+        courseId,
+        chapterId,
+        moduleId,
+      });
 
       if (response.data === "Next module unlocked!") {
-        await fetchCourseDetails(); // ✅ Update state instead of reload
+        await fetchCourseDetails(); // Refresh course details
       } else {
         console.warn("Unable to unlock the next module. Try again.");
       }
@@ -166,10 +181,8 @@ const CourseDetail = ({ courseId }) => {
 
   return (
     <div className="course-detail">
-      {/* Display the course title */}
       <h2 className="course-title">{course.title || course.courseTitle}</h2>
 
-{/*      loop to render chapters of a course */}
       {course.chapters && course.chapters.length > 0 ? (
         course.chapters.map((chapter) => (
           <ChapterDropdown
